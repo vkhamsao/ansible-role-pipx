@@ -1,0 +1,29 @@
+---
+# For Python 3, use python3-pip.
+pip_package: python3-pip
+pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
+pipx_install_packages:
+  - name: ansible-core
+    state: latest
+  - name: ansible-lint
+    state: latest
+  - name: black
+    state: latest
+  - name: hatch
+    state: latest
+  - name: linode-cli
+    state: latest
+  - name: molecule
+    state: latest
+  - name: mypy
+    state: latest
+  - name: pre-commit
+    state: latest
+  - name: pytest
+    state: latest
+  - name: ruff
+    state: latest
+  - name: tox
+    state: latest
+  - name: yamllint
+    state: latest

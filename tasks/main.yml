@@ -1,0 +1,49 @@
+---
+- name: Remove externally managed from Debian 12
+  ansible.builtin.import_tasks: debian12.yml
+  when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version|int >= 12
+- name: Ensure Pip is installed with cmd.
+  ansible.builtin.command:
+    cmd: "which pip || true"
+  register: pip_installed
+  failed_when: pip_installed.rc != 0 and pip_installed.stdout == ""
+  changed_when: false
+- name: Install pipx on Debian/Ubuntu
+  ansible.builtin.apt:
+    name: pipx
+    state: present
+    update_cache: yes
+  when: ansible_facts['os_family'] in ['Debian', 'Ubuntu']
+  become: true
+- name: Install pipx on Arch
+  community.general.pacman:
+    name: python-pipx
+    state: present
+    update_cache: yes
+  when: ansible_facts['os_family'] == 'Archlinux'
+  become: true
+- name: Install pipx on MacOS
+  ansible.builtin.pip:
+    name: pipx
+    state: present
+  when: ansible_facts['os_family'] == 'Darwin'
+- name: Ensure pipx_install_packages are installed.
+  community.general.pipx:
+    editable: "{{ item.editable | false }}"
+    executable: "{{ item.executable | default(omit) }}"
+    force: "{{ item.force | false }}"
+    inject_packages: "{{ item.inject_packages | false }}"
+    inlude_injected: "{{ item.inlude_injected | false }}"
+    install_apps: "{{ item.install_apps | false }}"
+    install_deps: "{{ item.install_deps | false }}"
+    index_url: "{{ item.index_url | default(omit) }}"
+    name: "{{ item.name | default(item) }}"
+    pip_args: "{{ item.pip_args | default(omit) }}"
+    python: "{{ item.python | default(omit) }}"
+    source: "{{ item.source | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    system_site_packages: "{{ item.system_site_packages | false }}"
+    version: "{{ item.version | default(omit) }}"
+  loop: "{{ pipx_install_packages }}"

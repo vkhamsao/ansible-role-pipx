@@ -1,0 +1,26 @@
+---
+dependencies: []
+galaxy_info:
+  role_name: pipx
+  author: vkhamsao
+  description: Pip (Python package manager) for Linux.
+  company: "vkhamsao.io"
+  license: "MIT"
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Darwin
+      versions:
+        - all
+  galaxy_tags:
+    - system
+    - server
+    - packaging
+    - python
+    - pipx
+    - tools
